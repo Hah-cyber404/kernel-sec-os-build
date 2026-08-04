@@ -1,0 +1,19 @@
+# Kernel Sec OS -- core ISO, base package list
+# XFCE desktop + Calamares installer + essential system packages.
+# Arsenal category lists (19 categories, curated ~340-tool core subset)
+# land in this same directory as separate *.list.chroot files -- see
+# the ISO build plan memory / planning artifact for the category mapping.
+
+task-xfce-desktop
+calamares
+calamares-settings-debian
+
+network-manager
+network-manager-gnome
+
+sudo
+firmware-linux-free
+
+live-boot
+live-config
+live-config-systemd

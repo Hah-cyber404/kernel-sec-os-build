@@ -1,0 +1,16 @@
+# live-build working state and output
+/cache/
+/chroot/
+/binary*/
+/.build/
+/local/
+*.iso
+*.img
+*.zsync
+*.log
+*.buildlog
+
+# kernel .deb's are dropped here at build time, not committed (large binaries,
+# built from the linux-6.12.41 tree in WSL -- see README.md)
+config/packages.chroot/*.deb
+!config/packages.chroot/.gitkeep

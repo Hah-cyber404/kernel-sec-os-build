@@ -1,0 +1,8 @@
+# These files run as shell scripts / get parsed by live-build inside WSL or
+# a Linux box -- force LF regardless of core.autocrlf, otherwise Windows
+# checkout injects \r and breaks the shebang line (same class of issue as
+# the linux-6.12.41 repo's Windows git gotchas).
+auto/* text eol=lf
+config/**/*.chroot text eol=lf
+config/**/*.conf text eol=lf
+*.sh text eol=lf
