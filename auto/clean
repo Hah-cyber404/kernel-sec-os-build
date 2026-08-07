@@ -1,7 +1,14 @@
 #!/bin/sh
 set -e
 
-lb clean noauto --purge "${@}"
+# NOTE: deliberately not passing --purge/--remove here. This live-build
+# version's lb_clean has a real bug: those two branches recurse into
+# "${0} --all" without the "noauto" guard every other self-call in the
+# file uses, so with an auto/clean present (this script) they loop
+# forever instead of cleaning. Plain noauto (matching live-build's own
+# minimal example) is the only path confirmed not to recurse. For a
+# deeper purge, remove cache/ and chroot/ by hand instead of --purge.
+lb clean noauto "${@}"
 
 rm -f config/binary config/bootstrap config/chroot config/common config/source
 rm -f build.log
