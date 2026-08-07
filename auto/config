@@ -6,6 +6,15 @@ set -e
 # Kernel comes from local/packages.chroot (kernel-sec .deb's), not from
 # Debian's stock linux-image -- see ../README.md.
 
+# debootstrap's minimal bookworm base doesn't include gnupg, so the very
+# first "apt update" inside the chroot fails with "gpg: No such file or
+# directory" before any of our package lists ever get a chance to run.
+# This live-build version has no --bootstrap-include CLI flag for it (grep
+# the lb_config source -- LB_BOOTSTRAP_INCLUDE is env-var-only here), and it
+# only takes effect on a fresh config tree, not an "update" of an existing
+# one (rm -rf config/ .build/ first if re-running this after a failed build).
+export LB_BOOTSTRAP_INCLUDE="gnupg"
+
 lb config noauto \
     --architecture amd64 \
     --distribution bookworm \
