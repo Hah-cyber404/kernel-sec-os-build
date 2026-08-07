@@ -3,7 +3,6 @@
 /chroot/
 /binary*/
 /.build/
-/local/
 *.iso
 *.img
 *.zsync
