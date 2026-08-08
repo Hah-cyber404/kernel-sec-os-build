@@ -15,14 +15,18 @@ set -e
 # one (rm -rf config/ .build/ first if re-running this after a failed build).
 export LB_BOOTSTRAP_INCLUDE="gnupg"
 
-# Without --mode debian, live-build auto-detects LB_MODE from the *host*
-# (this is built on WSL2 Ubuntu), and LB_MODE feeds ~20 case statements in
-# live-build's defaults.sh -- it's the actual root cause behind both the
-# wrong-mirror bug (archive.ubuntu.com instead of deb.debian.org) and the
-# "ubuntu-keyring has no installation candidate" bug hit while chasing that
-# one down. The --mirror-* flags below are kept anyway as belt-and-suspenders.
+# Deliberately NOT using --mode debian, even though LB_MODE auto-detected
+# from the host (WSL2 Ubuntu -> "ubuntu") is the root cause of the wrong
+# mirror and the ubuntu-keyring bug below. Traced lb_chroot_archives: for
+# LB_MODE=debian, the non-progress branch hardcodes the *pre-2023* Debian
+# security suite name "${dist}/updates", which 404s against the real
+# archive today. The LB_MODE=ubuntu branch happens to write the modern
+# "${dist}-security" name instead. So: keep the default (ubuntu) mode for
+# correct security-suite naming, and override just the two things that
+# default actually gets wrong for a Debian target -- mirror URLs and the
+# keyring package -- explicitly instead.
+
 lb config noauto \
-    --mode debian \
     --architecture amd64 \
     --distribution bookworm \
     --archive-areas "main contrib non-free non-free-firmware" \
@@ -34,4 +38,5 @@ lb config noauto \
     --mirror-chroot-security http://security.debian.org/debian-security/ \
     --mirror-binary http://deb.debian.org/debian/ \
     --mirror-binary-security http://security.debian.org/debian-security/ \
+    --keyring-packages debian-archive-keyring \
     "${@}"
