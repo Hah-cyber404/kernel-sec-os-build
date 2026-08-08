@@ -15,7 +15,14 @@ set -e
 # one (rm -rf config/ .build/ first if re-running this after a failed build).
 export LB_BOOTSTRAP_INCLUDE="gnupg"
 
+# Without --mode debian, live-build auto-detects LB_MODE from the *host*
+# (this is built on WSL2 Ubuntu), and LB_MODE feeds ~20 case statements in
+# live-build's defaults.sh -- it's the actual root cause behind both the
+# wrong-mirror bug (archive.ubuntu.com instead of deb.debian.org) and the
+# "ubuntu-keyring has no installation candidate" bug hit while chasing that
+# one down. The --mirror-* flags below are kept anyway as belt-and-suspenders.
 lb config noauto \
+    --mode debian \
     --architecture amd64 \
     --distribution bookworm \
     --archive-areas "main contrib non-free non-free-firmware" \
